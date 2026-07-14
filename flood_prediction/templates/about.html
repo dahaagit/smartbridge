@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Rising Waters</title>
+    <meta name="description" content="About the Rising Waters project creators.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="glass-container" style="max-width: 800px; text-align: center;">
+        <h1 class="hero-title" style="margin-bottom: 2rem;">About <span>The Project</span></h1>
+        
+        <h2>Artificial Intelligence and Machine Learning Internship</h2>
+        <p style="font-size: 1.2rem; color: var(--primary-dark); font-weight: 600; margin-bottom: 1rem;">
+            May - July 2026
+        </p>
+        
+        <p style="margin-bottom: 2rem;">
+            This project, <strong>Rising Waters: A Machine Learning Approach to Flood Prediction</strong>, was created as a capstone project for the <strong>SmartBridge</strong> Artificial Intelligence and Machine Learning internship program.
+        </p>
+
+        <div style="background: rgba(255,255,255,0.9); padding: 2rem; border-radius: 16px; margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 1rem;">The Team</h3>
+            <ul style="list-style: none; font-size: 1.3rem; font-weight: 600; color: var(--text-dark);">
+                <li style="margin-bottom: 0.5rem;">John</li>
+                <li>Catherine</li>
+            </ul>
+        </div>
+
+        <a href="{{ url_for('home') }}" class="btn-secondary">Back to Home</a>
+    </div>
+</body>
+</html>

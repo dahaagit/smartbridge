@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Flood Risk | Rising Waters</title>
+    <meta name="description" content="Enter weather details to predict flood chances.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        async function getCoordinates() {
+            const location = document.getElementById('location_search').value;
+            if (!location) {
+                alert("Please enter a location name first.");
+                return;
+            }
+            
+            const btn = document.getElementById('geo-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Searching...";
+            btn.disabled = true;
+
+            try {
+                // Use OpenStreetMap Nominatim API for geocoding
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    document.getElementById('latitude').value = data[0].lat;
+                    document.getElementById('longitude').value = data[0].lon;
+                    document.getElementById('location_name').value = location; // store for backend
+                } else {
+                    alert("Location not found. Please try entering a more specific state, city, or village.");
+                }
+            } catch (error) {
+                console.error("Geocoding error:", error);
+                alert("Error fetching location data.");
+            }
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    </script>
+</head>
+<body>
+    <div class="glass-container form-container">
+        <h2>Enter Weather Parameters</h2>
+
+        <!-- Geocoding Search Box -->
+        <div class="search-location-box">
+            <div class="form-group">
+                <label for="location_search">Search State, City, or Village (Auto-fills Latitude/Longitude)</label>
+                <input type="text" id="location_search" placeholder="e.g. Kerala, India or Mumbai">
+            </div>
+            <button type="button" id="geo-btn" class="btn-small" onclick="getCoordinates()">Get Coordinates</button>
+        </div>
+
+        <form action="{{ url_for('predict') }}" method="POST" class="predict-form">
+            <!-- Hidden input to pass location name to backend -->
+            <input type="hidden" name="location_name" id="location_name" value="">
+            
+            <!-- Numeric Inputs -->
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input type="number" step="any" name="latitude" id="latitude" required value="18.86">
+            </div>
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input type="number" step="any" name="longitude" id="longitude" required value="78.83">
+            </div>
+            <div class="form-group">
+                <label for="rainfall">Rainfall (mm)</label>
+                <input type="number" step="any" name="rainfall" id="rainfall" required value="150.5">
+            </div>
+            <div class="form-group">
+                <label for="temperature">Temperature (°C)</label>
+                <input type="number" step="any" name="temperature" id="temperature" required value="28.5">
+            </div>
+            <div class="form-group">
+                <label for="humidity">Humidity (%)</label>
+                <input type="number" step="any" name="humidity" id="humidity" required value="85.0">
+            </div>
+            <div class="form-group">
+                <label for="river_discharge">River Discharge (m³/s)</label>
+                <input type="number" step="any" name="river_discharge" id="river_discharge" required value="1200.0">
+            </div>
+            <div class="form-group">
+                <label for="water_level">Water Level (m)</label>
+                <input type="number" step="any" name="water_level" id="water_level" required value="12.5">
+            </div>
+            <div class="form-group">
+                <label for="elevation">Elevation (m)</label>
+                <input type="number" step="any" name="elevation" id="elevation" required value="45.0">
+            </div>
+            <div class="form-group">
+                <label for="population_density">Population Density</label>
+                <input type="number" step="any" name="population_density" id="population_density" required value="300">
+            </div>
+            <div class="form-group">
+                <label for="historical_floods">Historical Floods (Count)</label>
+                <input type="number" step="1" name="historical_floods" id="historical_floods" required value="2">
+            </div>
+            
+            <!-- Categorical Inputs -->
+            <div class="form-group">
+                <label for="land_cover">Land Cover</label>
+                <select name="land_cover" id="land_cover" required>
+                    <option value="Forest">Forest</option>
+                    <option value="Urban">Urban</option>
+                    <option value="Agricultural">Agricultural</option>
+                    <option value="Bare Soil">Bare Soil</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="soil_type">Soil Type</label>
+                <select name="soil_type" id="soil_type" required>
+                    <option value="Clay">Clay</option>
+                    <option value="Sandy">Sandy</option>
+                    <option value="Loam">Loam</option>
+                    <option value="Silt">Silt</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="infrastructure">Infrastructure Quality</label>
+                <select name="infrastructure" id="infrastructure" required>
+                    <option value="Poor">Poor</option>
+                    <option value="Average">Average</option>
+                    <option value="Good">Good</option>
+                </select>
+            </div>
+
+            <div class="form-actions" style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn-primary w-full">Predict Risk</button>
+                <a href="{{ url_for('home') }}" class="btn-secondary w-full text-center">Back Home</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

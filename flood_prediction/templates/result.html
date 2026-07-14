@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result | Rising Waters</title>
+    <meta name="description" content="View your flood prediction results.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="result-layout" style="max-width: 1200px; width: 100%;">
+        
+        <div class="result-card glass-container">
+            {% if status == 'danger' %}
+                <div class="icon-pulse danger-icon">!</div>
+                <h1 class="danger-text">{{ result }}</h1>
+                <p>High probability of flooding based on the provided weather patterns in <strong>{{ location }}</strong>. Take immediate precautions.</p>
+                
+                <h3 style="margin-top: 2rem; color: var(--danger-dark); text-align: left;">Immediate Actions Required:</h3>
+                <ul class="list-items" style="text-align: left;">
+                    <li>Move to higher ground immediately.</li>
+                    <li>Turn off utilities at the main switches/valves.</li>
+                    <li>Do not walk or drive through moving water.</li>
+                    <li>Prepare an emergency kit with food, water, and first aid.</li>
+                </ul>
+            {% else %}
+                <div class="icon-pulse safe-icon">✓</div>
+                <h1 class="safe-text">{{ result }}</h1>
+                <p>Weather conditions look stable for <strong>{{ location }}</strong>. No immediate flood risk detected.</p>
+                
+                <h3 style="margin-top: 2rem; color: var(--safe-dark); text-align: left;">General Precautions:</h3>
+                <ul class="list-items" style="text-align: left;">
+                    <li>Keep drainage systems clear of debris.</li>
+                    <li>Maintain an emergency supply kit at all times.</li>
+                    <li>Stay tuned to local weather stations.</li>
+                </ul>
+            {% endif %}
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <a href="{{ url_for('predict_input') }}" class="btn-primary">Predict Again</a>
+                <a href="{{ url_for('home') }}" class="btn-secondary">Back Home</a>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h2>Real-time Updates for {{ location }}</h2>
+            <div class="news-section" style="margin-top: 0; padding: 0;">
+                {% if news %}
+                    <div class="news-list">
+                    {% for item in news %}
+                        <div class="news-item">
+                            <a href="{{ item.link }}" target="_blank">{{ item.title }}</a>
+                            <span class="news-date">{{ item.published }}</span>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No recent local news available for this area.</p>
+                {% endif %}
+            </div>
+
+            <h3 style="margin-top: 2rem;">Emergency Contacts</h3>
+            <ul class="list-items">
+                <li><strong>112</strong> - All Emergencies</li>
+                <li><strong>1070</strong> - Relief Commissioner</li>
+                <li><strong>1078</strong> - NDMA Help Desk</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
